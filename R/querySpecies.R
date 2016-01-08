@@ -3,18 +3,9 @@
 #' Search for species records in Invaders, Footprints or Specimens tables, the
 #' results are indexed by conglomerate-date and may be filtered by state,
 #' organization, date, or conglomerate ids.
-#' @param state Character vector of Mexican states to include in the searh,
-#' defaults to "all".
-#' @param organization Character vector of organizations to include in the
-#' search (CONAFOR, CONANP, FMCN), defaults to "all".
-#' @param cgl_id A number.Character vector of conglomerate ids to include in the
-#' searh, defaults to "all".
-#' @param year Numeric vector indicating the year(s) to include in the search,
-#' defaults to 2014:2016.
-#' @param month Numeric vector indicating the month(s) to include in the
-#' search, defaults to 1:12.
 #' @param noms String indicating the species names to look for (ex:
 #' "vaca|equus")
+#' @inheritParams queryCgls
 #' @return A \code{data.frame} where each line corresponds to a
 #' conglomerate-date, filtered by \code{state}, \code{organization},
 #' \code{cgl_id}, \code{year}, and \code{month}, the \code{data.frame}
@@ -26,24 +17,27 @@
 NULL
 #> NULL
 #' @examples
+#' \dontrun{
+#' connect to database (snmb)
+#' PASS_SNMB = Sys.getenv("PASS_SNMB")
+#' database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
+#' "snmb", password = PASS_SNMB)
 #' invaders <- queryInvaders()
 #' footprints <- queryFootprints(noms = "vaca|bos|equus|caballo")
+#' \}
 
 #' @rdname querySpecies
-queryInvaders <- function(state = "all", organization = "all",
+queryInvaders <- function(database, state = "all", organization = "all",
   cgl_id = "all", year_visit = 2010:2016, month_visit = 1:12, noms = "all") {
   ruta_archivos_cluster <- ifelse(.Platform$OS.type == "unix",
     "/Volumes/sacmod/archivos_snmb/",
     "//madmexservices.conabio.gob.mx/sacmod/archivos_snmb/")
-  # connect to database (snmb)
-  PASS_SNMB = Sys.getenv("PASS_SNMB")
-  database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user = "snmb",
-    password = PASS_SNMB)
+
   # base table is computed with the queryCgls function
   cgl_table <- querysnmb:queryCgls(database, state, organization, cgl_id,
     year_visit, month_visit)
   if(nrow(cgl_table) == 0){
-    RPostgreSQL::dbDisconnect(database$con)
+    # RPostgreSQL::dbDisconnect(database$con)
     print("No hay registros que cumplan los requisitos solicitados.")
     final_table <- "No hay registros que cumplan los requisitos solicitados."
   }else{
@@ -141,20 +135,15 @@ queryInvaders <- function(state = "all", organization = "all",
 }
 
 #' @rdname querySpecies
-queryFootprints <- function(state = "all", organization = "all",
+queryFootprints <- function(database, state = "all", organization = "all",
   cgl_id = "all", year_visit = 2010:2016, month_visit = 1:12, noms = "all") {
-
-  # connect to database (snmb)
-  PASS_SNMB = Sys.getenv("PASS_SNMB")
-  database <- src_postgres(dbname = "snmb", host = "dbms", user = "snmb",
-    password = PASS_SNMB)
 
   # base table is computed with the queryCgls function
   cgl_table <- queryCgls(database, state, organization, cgl_id, year_visit,
     month_visit)
 
   if(nrow(cgl_table) == 0){
-    RPostgreSQL::dbDisconnect(database$con)
+    # RPostgreSQL::dbDisconnect(database$con)
     print("No hay registros que cumplan los requisitos solicitados.")
     final_table <- "No hay registros que cumplan los requisitos solicitados."
   }else{
@@ -252,20 +241,15 @@ queryFootprints <- function(state = "all", organization = "all",
 }
 
 #' @rdname querySpecies
-querySpecimens <- function(state = "all", organization = "all",
+querySpecimens <- function(database, state = "all", organization = "all",
   cgl_id = "all", year_visit = 2010:2016, month_visit = 1:12, noms = "all") {
-
-  # connect to database (snmb)
-  PASS_SNMB = Sys.getenv("PASS_SNMB")
-  database <- src_postgres(dbname = "snmb", host = "dbms", user = "snmb",
-    password = PASS_SNMB)
 
   # base table is computed with the queryCgls function
   cgl_table <- queryCgls(database, state, organization, cgl_id, year_visit,
     month_visit)
 
   if(nrow(cgl_table) == 0){
-    RPostgreSQL::dbDisconnect(database$con)
+    # RPostgreSQL::dbDisconnect(database$con)
     print("No hay registros que cumplan los requisitos solicitados.")
     final_table <- "No hay registros que cumplan los requisitos solicitados."
   }else{
