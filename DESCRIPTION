@@ -1,0 +1,18 @@
+Package: querysnmb
+Type: Package
+Title: Functions to query the SNMB database
+Version: 0.1
+Date: 2015-12-17
+Authors@R: person("Teresa", "Ortiz", email = "mortiz@conabio.gob.mx", role = c("aut", "cre"))
+Description: Set of auxiliary functions meant to query the SNMB database, this
+    functions also provide the path to the files.
+License: What license is it under?
+LazyData: TRUE
+Imports:
+    dplyr,
+    lubridate,
+    stringi,
+    DBI
+RoxygenNote: 5.0.1
+URL: http://github.com/tereom/querysnmb
+BugReports: http://github.com/tereom/querysnmb/issues
