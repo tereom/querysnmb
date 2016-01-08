@@ -10,8 +10,10 @@
 #'   search (CONAFOR, CONANP, FMCN), defaults to "all".
 #' @param cgl_id A number.Character vector of conglomerate ids to include in the
 #'   searh, defaults to "all".
-#' @param year,month Numeric vector indicating the year(s), month(s) to include
-#'   in the search, defaults to 2014:2016 and 1:12.
+#' @param year_visit Numeric vector indicating the year(s) to include in the
+#'   search, defaults to 2014:2016.
+#' @param year_visit Numeric vector indicating the month(s) to include in the
+#'    search, defaults to 1:12.
 #' @return A \code{data.frame} where each line corresponds to a
 #'   conglomerate-date, filtered by \code{state}, \code{organization},
 #'   \code{cgl_id}, \code{year}, and \code{month}, the \code{data.frame}
@@ -19,18 +21,30 @@
 #'   visit, organization, state, municipality, monitoring type, vegetation, and
 #'   perturbated.
 #' @examples
+#'
+#' \dontrun{
+#' connect to sqlite database (snmb)
+#' database <- dplyr::src_sqlite(system.file("extdata", "snmb.sqlite", package = "querysnmb"))
+#' cgl_table <- queryCgls(database)
+#' cgl_table <- queryCgls(database, organization = "CONAFOR", year = 2014)
+#' }
+#'
+#' \dontrun{
 #' # connect to database (snmb)
 #' PASS_SNMB = Sys.getenv("PASS_SNMB")
 #' database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
 #' "snmb", password = PASS_SNMB)
 #' cgl_table <- queryCgls(database)
 #' cgl_table <- queryCgls(database, organization = "CONAFOR", year = 2014)
-
+#' }
+#'
+#'@importFrom magrittr %>%
+#' @export
 queryCgls <- function(database, state = "all", organization = "all",
   cgl_id = "all", year_visit = 2010:2016, month_visit = 1:12) {
 
   cgl_table_aux <- dplyr::tbl(database, "conglomerado_muestra") %>%
-    collect()
+    dplyr::collect()
   if(state == "all"){
     state <- unique(cgl_table_aux$estado)
   }
@@ -45,8 +59,8 @@ queryCgls <- function(database, state = "all", organization = "all",
   # filter according to function arguments
   cgl_table_filters <- cgl_table_aux %>%
     dplyr::mutate(
-      anio = year(fecha_visita),
-      mes = month(fecha_visita)
+      anio = lubridate::year(fecha_visita),
+      mes = lubridate::month(fecha_visita)
     ) %>%
     dplyr::filter(estado %in% state, institucion %in% organization,
       nombre %in% cgl_id, anio %in% year_visit, mes %in% month_visit) %>%
