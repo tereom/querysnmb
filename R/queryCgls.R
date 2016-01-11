@@ -1,9 +1,9 @@
-
 #' Basic table by conglomerate-date.
 #'
 #' \code{queryCgls} creates basic tables by conglomerate-date.
-#' @param database  Connection to an existing postgresql database (as returned
-#'   by src_postgresql.
+#' @param database  Connection to an existing postgresql or sqlite database (as
+#'   returned by \code{\link[dplyr]{src_postgres}} or
+#'   \code{\link[dplyr]{src_sqlite}}.
 #' @param state Character vector of Mexican states to include in the searh,
 #'   defaults to "all".
 #' @param organization Character vector of organizations to include in the
@@ -12,7 +12,7 @@
 #'   searh, defaults to "all".
 #' @param year_visit Numeric vector indicating the year(s) to include in the
 #'   search, defaults to 2014:2016.
-#' @param year_visit Numeric vector indicating the month(s) to include in the
+#' @param month_visit Numeric vector indicating the month(s) to include in the
 #'    search, defaults to 1:12.
 #' @return A \code{data.frame} where each line corresponds to a
 #'   conglomerate-date, filtered by \code{state}, \code{organization},
@@ -22,23 +22,22 @@
 #'   perturbated.
 #' @examples
 #'
-#' \dontrun{
-#' connect to sqlite database (snmb)
-#' database <- dplyr::src_sqlite(system.file("extdata", "snmb.sqlite", package = "querysnmb"))
+#' # connect to sqlite database (snmb)
+#' database <- dplyr::src_sqlite(system.file("extdata", "snmb.sqlite",
+#'   package = "querysnmb"))
 #' cgl_table <- queryCgls(database)
 #' cgl_table <- queryCgls(database, organization = "CONAFOR", year = 2014)
-#' }
 #'
 #' \dontrun{
-#' # connect to database (snmb)
+#' # connect to postgreSQL database (snmb)
 #' PASS_SNMB = Sys.getenv("PASS_SNMB")
 #' database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
-#' "snmb", password = PASS_SNMB)
+#'   "snmb", password = PASS_SNMB)
 #' cgl_table <- queryCgls(database)
 #' cgl_table <- queryCgls(database, organization = "CONAFOR", year = 2014)
 #' }
 #'
-#'@importFrom magrittr %>%
+#' @importFrom magrittr %>%
 #' @export
 queryCgls <- function(database, state = "all", organization = "all",
   cgl_id = "all", year_visit = 2010:2016, month_visit = 1:12) {
