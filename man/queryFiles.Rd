@@ -2,7 +2,7 @@
 % Please edit documentation in R/queryFiles.R
 \name{queryFiles}
 \alias{queryFiles}
-\title{Paths to recordings and images}
+\title{Paths to recordings or images}
 \usage{
 queryFiles(database, file_type, state = "all", organization = "all",
   cgl_id = "all", year_visit = 2010:2016, month_visit = 1:12,
@@ -43,14 +43,14 @@ included in the results.}
 A \code{data.frame} containing the following columns:
    \code{file_type}, \code{state}, \code{institucion} (organization),
    \code{cgl_id} (conglomerate id), \code{date} (date of visit),
-   \code{lat, lon} (coordinates of the conglomerate),
+   \code{lat, lon} (coordinates of the conglomerate), and
    \code{archivo_nombre_original} (if original = TRUE, the original file
    name).
 }
 \description{
 \code{queryFiles} returns paths to recordings, images or videos. For this
-function to work you need to be connected to madmex folder, this is because
-the function searches for existing files in the madmex directories.
+function to work you need to be \strong{connected to madmex folder}, this is
+because the function searches for existing files in the madmex directories.
 }
 \examples{
 # connect to sqlite database (snmb)
