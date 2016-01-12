@@ -8,7 +8,7 @@
 #'   defaults to "all".
 #' @param organization Character vector of organizations to include in the
 #'   search (CONAFOR, CONANP, FMCN), defaults to "all".
-#' @param cgl_id A number.Character vector of conglomerate ids to include in the
+#' @param cgl_id Character vector of conglomerate ids to include in the
 #'   searh, defaults to "all".
 #' @param year_visit Numeric vector indicating the year(s) to include in the
 #'   search, defaults to 2014:2016.
