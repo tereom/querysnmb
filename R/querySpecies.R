@@ -16,12 +16,20 @@
 NULL
 #> NULL
 #' @examples
+#'
+#' # connect to sqlite database (snmb)
+#' database <- dplyr::src_sqlite(system.file("extdata", "snmb.sqlite",
+#'   package = "querysnmb"))
+#' invaders <- queryInvaders(database)
+#' specimens <- querySpecimens(database, state = "Chiapas")
+#'
 #' \dontrun{
 #' connect to database (snmb)
 #' PASS_SNMB = Sys.getenv("PASS_SNMB")
 #' database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
 #'   "snmb", password = PASS_SNMB)
-#' invaders <- queryInvaders(database)
+#' invaders <- queryInvaders(database, noms = "vaca|bos|perro",
+#'   year_visit = 2014:2015, organization = c("CONANP", "FMCN"))
 #' footprints <- queryFootprints(database, noms = "vaca|bos|equus|caballo")
 #' }
 
