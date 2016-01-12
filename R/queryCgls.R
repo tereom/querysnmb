@@ -47,7 +47,7 @@ queryCgls <- function(database, state = "all", organization = "all",
   if(state == "all"){
     state <- unique(cgl_table_aux$estado)
   }
-  if(organization == "all"){
+  if(organization[1] == "all"){
     organization <- unique(cgl_table_aux$institucion)
   }
   if(cgl_id == "all"){

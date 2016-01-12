@@ -47,7 +47,7 @@
 #' PASS_SNMB = Sys.getenv("PASS_SNMB")
 #' database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
 #'   "snmb", password = PASS_SNMB)
-#' files_acoustic_name <- queryFiles(file_type = "recordings",
+#' files_acoustic_name <- queryFiles(database, file_type = "recordings",
 #'   ultrasonic = FALSE, year_visit = 2014, original = TRUE)
 #' }
 #'
