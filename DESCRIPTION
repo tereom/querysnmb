@@ -13,6 +13,7 @@ Imports:
     magrittr,
     lubridate,
     stringi,
+    stringi,
     DBI
 RoxygenNote: 5.0.1
 URL: http://github.com/tereom/querysnmb
