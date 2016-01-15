@@ -16,3 +16,10 @@ results by.
   install.packages("devtools")
   devtools::install_github("tereom/querysnmb")
 ```
+
+## Future code improvements
+To optimize the code there are some simple improvements awaiting:
+
+1. Instead of importing the tables to the R environment and applying algebraic operations (filter, joins, selects, etc..) in R, one could perform the operations in the dbms (dbms optimizes the order of the operations and we import smaller datasets) and later import the results to R. For example, when using the dplyr package in R, the strategy would be to only use `collect` for final results. 
+
+2. If we are to import tables, and perform joins and filters in the R environment, one should first filter, for example, in queryInvaders the inner joins follow the order Conglomerado -> Transecto -> Epecie\_invasora -> Archivo\_especie\_invasora, once we have the final data.frame we filter by Archivo_especie_invasora, thus, it will be better to first filter and reverse the order of the joins, this way we work with smaller data.frames for we are not carrying useless rows throught the sequence of joins.
