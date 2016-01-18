@@ -29,12 +29,13 @@ search, defaults to 2014:2016.}
 \item{month_visit}{Numeric vector indicating the month(s) to include in the
 search, defaults to 1:12.}
 
-\item{photo, video, ultrasonic}{Binary variables, if file_type images,
-photo = FALSE, video = TRUE indicates to only search for videos, similarly
-video = FALSE, photo = TRUE excludes videos from results, defult sets both
-to TRUE. In case of recordings it is only possible to download one type of
-file (acoustic OR ultrasonic), defaults to download acoustic, this is
-ultrasonic = FALSE.}
+\item{photo, video, ultrasonic}{Binary variables, if
+\code{file_type = "images"}, \code{photo = FALSE, video = TRUE} indicates
+to only search for videos, similarly \code{video = FALSE, photo = TRUE}
+excludes videos from results, defult sets both to \code{TRUE}. In case of
+recordings it is only possible to download one type of file (acoustic OR
+ultrasonic), defaults to download acoustic, this is
+\code{ultrasonic = FALSE}.}
 
 \item{original}{Indicates if a column with the original file name should be
 included in the results.}
@@ -67,7 +68,7 @@ files_acoustic <- queryFiles(database, file_type = "recordings",
 PASS_SNMB = Sys.getenv("PASS_SNMB")
 database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
   "snmb", password = PASS_SNMB)
-files_acoustic_name <- queryFiles(file_type = "recordings",
+files_acoustic_name <- queryFiles(database, file_type = "recordings",
   ultrasonic = FALSE, year_visit = 2014, original = TRUE)
 }
 

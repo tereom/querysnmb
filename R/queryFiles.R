@@ -9,12 +9,13 @@
 #' @param file_type String specifing which file paths should be retrieved, value
 #'   should be "recordings" or "images" (includes images and videos from the
 #'   camera trap).
-#' @param photo,video,ultrasonic Binary variables, if \code{file_type = "images"},
-#'   \code{photo = FALSE, video = TRUE} indicates to only search for videos,
-#'   similarly \code{video = FALSE, photo = TRUE excludes videos from results,
-#'   defult sets both to \code{TRUE}. In case of recordings it is only possible
-#'   to download one type of file (acoustic OR ultrasonic), defaults to download
-#'   acoustic, this is \code{ultrasonic = FALSE}.
+#' @param photo,video,ultrasonic Binary variables, if
+#'   \code{file_type = "images"}, \code{photo = FALSE, video = TRUE} indicates
+#'   to only search for videos, similarly \code{video = FALSE, photo = TRUE}
+#'   excludes videos from results, defult sets both to \code{TRUE}. In case of
+#'   recordings it is only possible to download one type of file (acoustic OR
+#'   ultrasonic), defaults to download acoustic, this is
+#'   \code{ultrasonic = FALSE}.
 #' @param organization Character vector of organizations to include in the
 #'   search (CONAFOR, CONANP, FMCN), defaults to "all".
 #' @param cgl_id Character vector of conglomerate ids to include in the
