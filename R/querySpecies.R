@@ -288,7 +288,7 @@ querySpecimens <- function(database, state = "all", organization = "all",
 
     # registros de especimen/restos correspondientes a registros extra
     specimen_extra <- dplyr::collect(dplyr::tbl(database, "especimen_restos_extra")) %>%
-      dplyr::inner_join(cgl_table, by = c("conglomerado_muestra_id"))  %>%
+      dplyr::inner_join(cgl_table, by = c("conglomerado_muestra_id")) %>%
       dplyr::filter(grepl(noms, nombre_comun, ignore.case = TRUE) |
           grepl(noms, nombre_cientifico, ignore.case = TRUE)) %>%
       dplyr::select(conglomerado_muestra_id, cgl, lat, lon, fecha_visita, institucion,
@@ -297,9 +297,10 @@ querySpecimens <- function(database, state = "all", organization = "all",
         es_especimen, nombre_comun, nombre_cientifico, numero_individuos,
         esta_dentro_conglomerado)
 
-    archivo_especimen_extra <- dplyr::collect(
-      dplyr::tbl(database, "archivo_especimen_restos_extra")) %>%
+    archivo_especimen_extra <- dplyr::tbl(database,
+        "archivo_especimen_restos_extra") %>%
       dplyr::select(-archivo_nombre_original) %>%
+      dplyr::collect() %>%
       dplyr::inner_join(specimen_extra, by = c("especimen_restos_extra_id")) %>%
       dplyr::mutate(
         tabla = "especimen_restos_extra",
@@ -327,3 +328,70 @@ querySpecimens <- function(database, state = "all", organization = "all",
 }
 
 
+#' @rdname querySpecies
+#' @export
+queryCamera <- function(database, state = "all", organization = "all",
+  cgl_id = "all", year_visit = 2010:2016, month_visit = 1:12, noms = "all") {
+  ruta_archivos_cluster <- ifelse(.Platform$OS.type == "unix",
+    "/Volumes/sacmod/archivos_snmb/",
+    "//madmexservices.conabio.gob.mx/sacmod/archivos_snmb/")
+
+  # base table is computed with the queryCgls function
+  cgl_table <- queryCgls(database, state, organization, cgl_id, year_visit,
+    month_visit)
+
+  if(nrow(cgl_table) == 0){
+    # RPostgreSQL::dbDisconnect(database$con)
+    print("No hay registros que cumplan los requisitos solicitados.")
+    final_table <- "No hay registros que cumplan los requisitos solicitados."
+  }else{
+    if(noms == "all"){
+      camara_aux <- dplyr::tbl(database, "archivo_camara") %>%
+        dplyr::collect() %>%
+        dplyr::select(nombre_comun, nombre_cientifico)
+      especies <- unique(c(camara_aux$nombre_comun,
+        camara_aux$nombre_cientifico))
+      especies <- especies[!is.na(especies) & especies != "NA"]
+      noms <- paste(especies, collapse = "|")
+    }
+
+    # registros de trampa cámara
+    sitio_cgl <- dplyr::tbl(database, "sitio_muestra") %>%
+      dplyr::select(sitio_muestra_id = id, conglomerado_muestra_id) %>%
+      dplyr::collect() %>%
+      dplyr::inner_join(cgl_table, by = c("conglomerado_muestra_id"))
+
+    camara <- dplyr::tbl(database, "camara") %>%
+      dplyr::select(camara_id = id, sitio_muestra_id, comentario) %>%
+      dplyr::collect() %>%
+      dplyr::inner_join(sitio_cgl, by = c("sitio_muestra_id"))
+
+    archivo_camara <- dplyr::tbl(database, "archivo_camara") %>%
+      dplyr::collect() %>%
+      dplyr::filter(grepl(noms, nombre_comun, ignore.case = TRUE) |
+          grepl(noms, nombre_cientifico, ignore.case = TRUE)) %>%
+      dplyr::inner_join(camara, by = "camara_id") %>%
+      dplyr::mutate(
+        tabla = "camara",
+        nuevo_nombre = gsub("(.*\\.).*\\.(.*\\.).*\\.", "\\1\\2", archivo),
+        path_archivos_cluster = paste(ruta_archivos_cluster, cgl,
+          "/", substr(fecha_visita, 1, 4), "_", substr(fecha_visita, 6, 7),
+          sep = ""),
+        path_imagen_cluster = paste(path_archivos_cluster,
+          "/fotos_videos/", nuevo_nombre, sep = "")
+      ) %>%
+      dplyr::group_by(path_archivos_cluster) %>%
+      dplyr::mutate(
+        path_formato_cluster =  list.files(path = path_archivos_cluster,
+          pattern = ".pdf", ignore.case = TRUE, full.names = TRUE)[1]
+      )
+
+    final_table <- dplyr::ungroup(archivo_camara)%>%
+      dplyr::select(id, camara_id, sitio_muestra_id, conglomerado_muestra_id,
+        cgl, lat, lon, fecha_visita, institucion, estado, municipio,
+        monitoreo_tipo, vegetacion_tipo, perturbado, comentario, nombre_comun,
+        nombre_cientifico, numero_individuos, path_imagen_cluster,
+        path_formato_cluster)
+  }
+  final_table
+}
