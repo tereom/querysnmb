@@ -142,6 +142,16 @@ queryInvaders <- function(database, state = "all", organization = "all",
         vegetacion_tipo, perturbado, tabla, transecto_numero, comentario,
         nombre_en_lista, nombre_comun, nombre_cientifico, numero_individuos,
         esta_dentro_conglomerado, path_imagen_cluster, path_formato_cluster)
+
+    # if there is no connection to the server with the files when running this
+    # function the value of path_formato_cluster will be all NAs, so the
+    # following if deletes the path_formato_cluster in case it returns all NA's.
+    # To improve the code one could do the "if" at the beginning of the script
+    # and never search for the files in the first place.
+
+    if (sum(is.na(final_table$path_formato_cluster)) == nrow(final_table)) {
+      final_table <- dplyr::select(final_table, -path_formato_cluster)
+    }
   }
   final_table
 }
@@ -255,7 +265,17 @@ queryFootprints <- function(database, state = "all", organization = "all",
         vegetacion_tipo, perturbado, tabla, transecto_numero, comentario,
         nombre_comun, nombre_cientifico, es_huella, largo, ancho,
         esta_dentro_conglomerado, path_imagen_cluster, path_formato_cluster)
+
+    # if there is no connection to the server with the files when running this
+    # function the value of path_formato_cluster will be all NAs, so the
+    # following if deletes the path_formato_cluster in case it returns all NA's.
+    # To improve the code one could do the "if" at the beginning of the script
+    # and never search for the files in the first place.
+
+    if (sum(is.na(final_table$path_formato_cluster)) == nrow(final_table)) {
+      final_table <- dplyr::select(final_table, -path_formato_cluster)
     }
+  }
   final_table
 }
 
@@ -323,7 +343,16 @@ querySpecimens <- function(database, state = "all", organization = "all",
           monitoreo_tipo, vegetacion_tipo, perturbado, tabla, comentario,
           nombre_comun, nombre_cientifico, es_especimen, numero_individuos,
           esta_dentro_conglomerado, path_imagen_cluster, path_formato_cluster)
+    # if there is no connection to the server with the files when running this
+    # function the value of path_formato_cluster will be all NAs, so the
+    # following if deletes the path_formato_cluster in case it returns all NA's.
+    # To improve the code one could do the "if" at the beginning of the script
+    # and never search for the files in the first place.
+
+    if (sum(is.na(final_table$path_formato_cluster)) == nrow(final_table)) {
+      final_table <- dplyr::select(final_table, -path_formato_cluster)
     }
+  }
   final_table
 }
 
@@ -392,6 +421,16 @@ queryCamera <- function(database, state = "all", organization = "all",
         monitoreo_tipo, vegetacion_tipo, perturbado, comentario, nombre_comun,
         nombre_cientifico, numero_individuos, path_imagen_cluster,
         path_formato_cluster)
+
+    # if there is no connection to the server with the files when running this
+    # function the value of path_formato_cluster will be all NAs, so the
+    # following if deletes the path_formato_cluster in case it returns all NA's.
+    # To improve the code one could do the "if" at the beginning of the script
+    # and never search for the files in the first place.
+
+    if (sum(is.na(final_table$path_formato_cluster)) == nrow(final_table)) {
+      final_table <- dplyr::select(final_table, -path_formato_cluster)
+    }
   }
   final_table
 }
