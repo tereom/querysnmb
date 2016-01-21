@@ -46,15 +46,13 @@ tables, the results are indexed by conglomerate.
 # connect to sqlite database (snmb)
 database <- dplyr::src_sqlite(system.file("extdata", "snmb.sqlite",
   package = "querysnmb"))
-files_images_videos <- queryFiles(database, file_type = "images",
-  cgl_id = "405", year_visit = 2014)
+presence_cows <- querySpPresence(database, noms = "vaca|bos|taurus")
 \dontrun{
 # connect to postgreSQL database (snmb)
 PASS_SNMB = Sys.getenv("PASS_SNMB")
 database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
   "snmb", password = PASS_SNMB)
-files_acoustic_name <- queryFiles(database, file_type = "recordings",
-  ultrasonic = FALSE, year_visit = 2014, original = TRUE)
+presence_cows <- querySpPresence(database, noms = "vaca|bos|taurus")
 }
 }
 
