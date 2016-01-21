@@ -1,7 +1,7 @@
 #' Tables of species presence by conglomerate.
 #'
 #' Search for species records in Invaders, Footprints, Specimens and Camera
-#' tables, the results are indexed by conglomerate.
+#' tables.
 #' @param noms String indicating the species names to look for (ex:
 #' "vaca|equus")
 #' @param database  Connection to an existing postgresql or sqlite database (as
