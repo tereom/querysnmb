@@ -28,6 +28,22 @@
 #'      (\emph{lng, lat}), the coordinates can be supplied by the user (throught
 #'      the parameter \code{malla}) or taken from the database.
 #'    }
+#'
+#' @examples
+#' # connect to sqlite database (snmb)
+#' database <- dplyr::src_sqlite(system.file("extdata", "snmb.sqlite",
+#'   package = "querysnmb"))
+#' files_images_videos <- queryFiles(database, file_type = "images",
+#'   cgl_id = "405", year_visit = 2014)
+#' \dontrun{
+#' # connect to postgreSQL database (snmb)
+#' PASS_SNMB = Sys.getenv("PASS_SNMB")
+#' database <- dplyr::src_postgres(dbname = "snmb", host = "dbms", user =
+#'   "snmb", password = PASS_SNMB)
+#' files_acoustic_name <- queryFiles(database, file_type = "recordings",
+#'   ultrasonic = FALSE, year_visit = 2014, original = TRUE)
+#' }
+
 #' @importFrom magrittr %>%
 #' @export
 querySpPresence <- function(database, noms, malla = NULL) {
@@ -174,7 +190,7 @@ querySpPresence <- function(database, noms, malla = NULL) {
   presencia <- desagregado %>%
     dplyr::select(cgl_id, lng, lat)
   desagregado_limpio <- desagregado %>%
-    dplyr::select(-conglomerado_muestra_id, -cgl_id, -lng, -lat) %>%
+    dplyr::select(-conglomerado_muestra_id, -cgl_id, -lng, -lat, -pres) %>%
     dplyr::mutate_each(dplyr::funs(codeAsChar), contains("esp"))
   colnames(desagregado_limpio) = c("Id", "Estado", "Municipio", "Uso suelo",
     "EI", "HE", "EI ex", "HE ex", "ER ex", "Cámara")
