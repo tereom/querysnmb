@@ -1,8 +1,12 @@
 #' Query tables by species.
 #'
-#' Search for species records in Invaders, Footprints or Specimens tables, the
-#' results are indexed by conglomerate-date and may be filtered by state,
-#' organization, date, or conglomerate ids.
+#' Search for species records in Invaders, Footprints, Specimens or Camera Trap
+#' tables, in the results each register matches a file, and they include
+#' characteristics of the animal or plant to which the file makes reference. The
+#' results also include the path to the image file (stored in the madmex
+#' folder), also, if the computer is connected to the madmex folder when caling
+#' the function, the results will include the path to the scanned paperwork
+#' filled in field.
 #' @param noms String indicating the species names to look for (ex:
 #' "vaca|equus")
 #' @inheritParams queryCgls
