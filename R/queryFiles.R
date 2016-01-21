@@ -103,7 +103,8 @@ queryFiles <- function(database, file_type, state = "all", organization = "all",
         video, ultrasonic)
     }
     if(nrow(cgl_paths_table) == 0){
-      print("No hay achivos que cumplan los requisitos solicitados.")
+      print("No hay achivos que cumplan los requisitos solicitados,
+        revisar conexión al servidor (cluster/madmex).")
       final_table <- NA
     }else{
       final_table <- dplyr::collect(dplyr::tbl(database, "sitio_muestra")) %>%
