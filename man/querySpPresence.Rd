@@ -40,7 +40,7 @@ A list with 2 elements (both have class \code{data.frame}):
 }
 \description{
 Search for species records in Invaders, Footprints, Specimens and Camera
-tables, the results are indexed by conglomerate.
+tables.
 }
 \examples{
 # connect to sqlite database (snmb)
