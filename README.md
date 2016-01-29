@@ -2,9 +2,9 @@
 
 The querysnmb package provides functions to query the SNMB database in an
 amicable manner, this is, the user does not need to know the database schema
-or repeateadly perform annoying joins to have useful databases.
+or repeateadly perform annoying joins to have useful datasets.
 
-The package was developed using Roxygen and devtools, as described in [R Packages](http://r-pkgs.had.co.nz).
+The package was developed using [roxygen2](https://github.com/yihui/roxygen2) and [devtools](https://github.com/hadley/devtools), as described in [R Packages](http://r-pkgs.had.co.nz).
 
 ## Functions
 The functions in this package use [dplyr](https://github.com/hadley/dplyr) to query the database, the advantage of
