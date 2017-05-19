@@ -13,4 +13,4 @@
 #' @docType package
 #' @name querysnmb
 NULL
-#> NULL
+# > NULL
