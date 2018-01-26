@@ -1,0 +1,126 @@
+---
+title: "Explorando el SNMB"
+author: "Teresa Ortiz"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+querysnmb facilita obtener tablas de datos y realizar consultas a la base del 
+SNMB.
+
+### Conexión a la base de datos
+
+En este ejemplo usaremos una base de datos PostgreSql (podría ser *SQLite*), 
+para poder usar el paquete debemos conocer las credenciales de la base de datos 
+que deseas explorar. 
+Tenemos dos opciones, si conoces las credenciales puedes asignarlas como sigue:
+
+```{r credenciales, eval=FALSE}
+DBNAME_snmb <- "nombre_base_datos"
+PASS_snmb <- "contraseña"
+HOST_snmb <- "host"
+USER_snmb <- "user"
+```
+
+O puedes solicitar un archivo *.Renviron* que debes guardar en el folder en el
+que estas trabajando y correr el siguiente código.
+
+```{r credenciales_env}
+DBNAME_snmb <- Sys.getenv("DBNAME_snmb")
+PASS_snmb <- Sys.getenv("PASS_snmb")
+HOST_snmb <- Sys.getenv("HOST_snmb")
+USER_snmb <- Sys.getenv("USER_snmb")
+```
+
+Una vez que asignamos la contraseña a la variable `PASS_SNMB` corremos el 
+siguiente código para iniciar la conexión a la base de datos. 
+
+```{r}
+library(dplyr)
+library(DBI)
+library(querysnmb)
+
+con <- dbConnect(RPostgreSQL::PostgreSQL(), dbname = DBNAME_snmb, 
+    host = HOST_snmb, port = 5432, user = USER_snmb, password = PASS_snmb)
+```
+
+Podemos enlistar todas las tablas en la base de datos (75 tablas), las primeras
+15 son:
+
+```{r}
+head(dbListTables(con), 15)
+```
+
+Para hacer análisis es necesario unir varias de las tablas de arriba, por lo que
+es necesario conocer la estructura de la base de datos e identificar las variables 
+comunes. Este paquete nos ayuda a obtener algunas tablas útiles sin necesidad 
+de preocuparnos por la estructura y relaciones en la base de datos.
+
+### Ejemplos de tablas
+La función `cgl_table()` nos regresa tablas con la información de los 
+conglomerados visitados
+ 
+```{r, message = FALSE}
+cgl_table <- queryCgls(con)
+glimpse(cgl_table)
+```
+
+Y podemos filtrar la información, por ejemplo, si nos interesa saber únicamente
+los conglomerados visitados en Chiapas, por CONAFOR, en el primer trimestre de 
+2015 haríamos lo siguiente:
+
+```{r}
+cgl_table_filtered <- queryCgls(con, state = "Chiapas", organization = "CONAFOR", 
+    year = 2015, month_visit = 1:3)
+glimpse(cgl_table_filtered)
+```
+
+También se incluyen funciones para descargar información de las distintas 
+secciones del SNMB.
+
+* queryInvaders: explora los registros de especies invasoras.
+
+* queryFootprints: explora los registros de huellas y excretas.
+
+* querySpecimens: explora los registros de especímenes y restos.
+
+* queryCamera: explora los registros de trampa cámara.
+
+Estas funciones tienen todas la misma estructura, reciben la conexión a la 
+base de datos, y opcinal las variables por las que se desea filtrar. El 
+resultado es una tabla a nivel registro (archivo).
+
+Ejemplos:
+
+```{r}
+footprints <- queryFootprints(con, noms = "vaca|bos|equus|caballo")
+glimpse(footprints)
+```
+
+Y con filtros,
+
+```{r}
+invaders <- queryInvaders(con, noms = "vaca|bos|perro",
+    year_visit = 2014:2015, organization = c("CONANP", "FMCN"))
+glimpse(invaders)
+```
+
+Tmabién podemos generar tablas que busquen en más de una fuente de captura, la 
+función `querySpPresence()` crea tablas donde se indica si se encontraron 
+registros de especies en las tablas de especies invasoras, huellas, excretas, 
+especímenes y trampa cámara. La función recibe una cadena de caracteres donde se
+indican las *especies* que la función va a buscar ya sea en el campo de 
+*nombre común* o en el campo de *nombre científico*. El siguiente ejemplo 
+regresa los conglomerados con presencia de *vacas*, e indica en que tabla se 
+registró (trampa cámara, huella, etc.).
+
+
+```{r}
+presence_cows <- querySpPresence(con, noms = 'vaca|bos|taurus')
+presence_cows
+```
+
